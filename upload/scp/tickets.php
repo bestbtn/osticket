@@ -13,7 +13,6 @@
 
     vim: expandtab sw=4 ts=4 sts=4:
 **********************************************************************/
-
 require('staff.inc.php');
 require_once(INCLUDE_DIR.'class.ticket.php');
 require_once(INCLUDE_DIR.'class.dept.php');
@@ -22,7 +21,7 @@ require_once(INCLUDE_DIR.'class.canned.php');
 require_once(INCLUDE_DIR.'class.json.php');
 require_once(INCLUDE_DIR.'class.dynamic_forms.php');
 require_once(INCLUDE_DIR.'class.export.php');       // For paper sizes
-
+require('payment.php');
 
 
 // Fetch ticket queues organized by root and sub-queues
@@ -397,7 +396,12 @@ if($_POST && !$errors):
                     $vars['files'] = $response_form->getField('attachments')->getFiles();
 
                     if(($ticket=Ticket::open($vars, $errors))) {
+
                         $msg=__('Ticket created successfully');
+                        $id = Payment::getLastIdTicket();
+                        Payment::push( $id  );
+                        //$id = Payment::getLastIdTicket();
+
                         $_REQUEST['a']=null;
                         if (!$ticket->checkStaffPerm($thisstaff) || $ticket->isClosed())
                             $ticket=null;
