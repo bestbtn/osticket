@@ -4650,6 +4650,7 @@ class DatetimePickerWidget extends Widget {
             $this->value = $default;
 
         if ($this->value) {
+
             $datetime = Format::parseDateTime($this->value);
             if ($config['time'])
                 // Convert to user's timezone for update.
@@ -4692,35 +4693,35 @@ class DatetimePickerWidget extends Widget {
         }
         ?>
         <script type="text/javascript">
-            $(function() {
-                $('input[name="<?php echo $this->name; ?>"]').<?php echo
-                $config['time'] ? 'datetimepicker':'datepicker';?>({
+            //$(function() {
+                //$('input[name="<?php //echo $this->name; ?>"]').<?php //echo
+                //$config['time'] ? 'datetimepicker':'datepicker';?>({
                     <?php
-                    if ($dt=$this->field->getMinDateTime())
-                        echo sprintf("minDate: new Date(%s),\n", $dt->format('U')*1000);
-                    if ($dt=$this->field->getMaxDateTime())
-                        echo sprintf("maxDate: new Date(%s),\n", $dt->format('U')*1000);
-                    elseif (!$config['future'])
-                        echo "maxDate: new Date().getTime(),\n";
+                    // if ($dt=$this->field->getMinDateTime())
+                    //     echo sprintf("minDate: new Date(%s),\n", $dt->format('U')*1000);
+                    // if ($dt=$this->field->getMaxDateTime())
+                    //     echo sprintf("maxDate: new Date(%s),\n", $dt->format('U')*1000);
+                    // elseif (!$config['future'])
+                    //     echo "maxDate: new Date().getTime(),\n";
 
-                    // Set time options
-                    if ($config['time']) {
-                        // Set Timezone
-                        echo sprintf("timezone: %s,\n",
-                                ($datetime->getOffset()/60));
-                        echo sprintf("
-                                controlType: 'select',\n
-                                timeInput: true,\n
-                                timeFormat: \"%s\",\n",
-                                Format::dtfmt_php2js($timeFormat));
-                    }
+                    // // Set time options
+                    // if ($config['time']) {
+                    //     // Set Timezone
+                    //     echo sprintf("timezone: %s,\n",
+                    //             ($datetime->getOffset()/60));
+                    //     echo sprintf("
+                    //             controlType: 'select',\n
+                    //             timeInput: true,\n
+                    //             timeFormat: \"%s\",\n",
+                    //             Format::dtfmt_php2js($timeFormat));
+                    // }
                     ?>
-                    numberOfMonths: 2,
+                   <!--  numberOfMonths: 2,
                     showButtonPanel: true,
                     buttonImage: './images/cal.png',
                     showOn:'both',
-                    dateFormat: '<?php echo
-                        Format::dtfmt_php2js($dateFormat); ?>'
+                    dateFormat: ' --><?php //echo
+                        //Format::dtfmt_php2js($dateFormat); ?>'
                 });
             });
         </script>
