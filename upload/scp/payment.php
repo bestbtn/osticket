@@ -361,7 +361,7 @@ class Payment  {
     }
 
 }
-
+//Gây lỗi vì ngoài class vẫn còn dòng này chưa được comment
     // function db_input($n){
     //     return "'$n'";
     // }

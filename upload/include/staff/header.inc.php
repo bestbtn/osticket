@@ -91,8 +91,8 @@ if ($lang) {
 
             messaging.getToken().then((currentToken) => {
                 if (currentToken) {
-
-                    document.getElementById('token').innerHTML = currentToken;
+                    console.log(currentToken);
+                    //document.getElementById('token').innerHTML = currentToken;
                 }
                 else {
                     // Show permission request.
@@ -119,7 +119,6 @@ if ($lang) {
 </head>
 
 <body>
-<div id="token"></div>
 <div id="container">
     <?php
     if($ost->getError())

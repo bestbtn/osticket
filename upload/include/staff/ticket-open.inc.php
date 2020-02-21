@@ -55,7 +55,20 @@ if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
 
 if ($_POST)
     $info['duedate'] = Format::date(strtotime($info['duedate']), false, false, 'UTC');
+
 ?>
+
+
+<style type="text/css">
+    #dynamic-form tr:nth-child(1),
+    #dynamic-form tr:nth-child(2),
+    #dynamic-form tr:nth-child(3),
+    #dynamic-form tr:nth-child(4),
+    #dynamic-form tr:nth-child(5){
+        display: none;
+    }
+</style>
+
 <form action="tickets.php?a=open" method="post" class="save"  enctype="multipart/form-data">
  <?php csrf_token(); ?>
  <input type="hidden" name="do" value="create">
@@ -73,7 +86,7 @@ if ($_POST)
          first row needs to have two cells -->
         <tr><td style="padding:0;"></td><td style="padding:0;"></td></tr>
     </thead>
-    <tbody>
+    <tbody style="display: none;">
         <tr>
             <th colspan="2">
                 <em><strong><?php echo __('User and Collaborators'); ?></strong>: </em>
@@ -191,7 +204,7 @@ if ($_POST)
                 <em><strong><?php echo __('Ticket Information and Options');?></strong>:</em>
             </th>
         </tr>
-        <tr>
+        <tr style="display: none">
             <td width="160" class="required">
                 <?php echo __('Ticket Source');?>:
             </td>
@@ -224,8 +237,11 @@ if ($_POST)
                             data: data,
                             dataType: 'json',
                             success: function(json) {
+                              console.log(json.html);
                               $('#dynamic-form').empty().append(json.html);
                               $(document.head).append(json.media);
+                               $('#_c325b164214590').val('KT test');
+                                $('textarea.richtext').val('KT test');
                             }
                           });">
                     <?php
@@ -235,10 +251,12 @@ if ($_POST)
                         else { ?>
                         <option value="" selected >&mdash; <?php echo __('Select Help Topic'); ?> &mdash;</option>
 <?php                   }
+                        $nameForm = "";
                         foreach($topics as $id =>$name) {
                             echo sprintf('<option value="%d" %s %s>%s</option>',
                                 $id, ($info['topicId']==$id)?'selected="selected"':'',
                                 $selected, $name);
+                            $nameForm = $name;
                         }
                         if (count($topics) == 1 && !$forms) {
                             if (($T = Topic::lookup($id)))
@@ -250,7 +268,7 @@ if ($_POST)
                 &nbsp;<font class="error"><b>*</b>&nbsp;<?php echo $errors['topicId']; ?></font>
             </td>
         </tr>
-        <tr>
+        <tr style="display: none;">
             <td width="160">
                 <?php echo __('Department'); ?>:
             </td>
@@ -276,7 +294,7 @@ if ($_POST)
             </td>
         </tr>
 
-         <tr>
+         <tr style="display: none;">
             <td width="160">
                 <?php echo __('SLA Plan');?>:
             </td>
@@ -297,7 +315,7 @@ if ($_POST)
          </tr>
 
          <tr>
-            <td width="160">
+            <td width="160" style="display: none;>
                 <?php echo __('Due Date');?>:
             </td>
             <td>
@@ -313,7 +331,7 @@ if ($_POST)
 
         <?php
         if($thisstaff->hasPerm(Ticket::PERM_ASSIGN, false)) { ?>
-        <tr>
+        <tr style="display: none;>
             <td width="160"><?php echo __('Assign To');?>:</td>
             <td>
                 <select id="assignId" name="assignId">
@@ -353,7 +371,7 @@ if ($_POST)
             }
         ?>
         </tbody>
-        <tbody>
+        <tbody style="display: none;">
         <?php
         //is the user allowed to post replies??
         if ($thisstaff->getRole()->hasPerm(Ticket::PERM_REPLY)) { ?>
