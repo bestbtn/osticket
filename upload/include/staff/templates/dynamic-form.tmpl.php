@@ -62,12 +62,16 @@ if (isset($options['entry']) && $options['mode'] == 'edit') { ?>
             }
 
             if ($field->isEditableToStaff() || $isCreate) {
-                $field->render($options); ?>
+                $field->render($options);
+
+                ?>
+
                 <?php if (!$field->isBlockLevel() && $field->isRequiredForStaff()) { ?>
                     <span class="error">*</span>
                 <?php
                 }
                 if ($field->isStorable() && ($a = $field->getAnswer()) && $a->isDeleted()) {
+
                     ?><a class="action-button float-right danger overlay" title="Delete this data"
                         href="#delete-answer"
                         onclick="javascript:if (confirm('<?php echo __('You sure?'); ?>'))
@@ -101,8 +105,10 @@ if (isset($options['entry']) && $options['mode'] == 'edit') { ?>
             } else {
                 $val = '';
                 if ($field->value)
+
                     $val = $field->display($field->value);
                 elseif (($a= $field->getAnswer()))
+
                     $val = $a->display();
 
                 echo $val;

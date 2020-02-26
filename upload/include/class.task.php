@@ -977,9 +977,7 @@ class Task extends TaskModel implements RestrictedAccess, Threadable {
     /* public */
     function postReply($vars, &$errors, $alert = true) {
 
-        echo "<pre>";
-        print_r($vars);
-        echo "<pre>";
+
         global $thisstaff, $cfg;
 
 

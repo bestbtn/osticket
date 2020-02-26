@@ -36,14 +36,15 @@ class DynamicFormsAjaxAPI extends AjaxController {
                 'staff' => !$client,
                 'mode' => 'create'));
             $html .= ob_get_clean();
-            ob_start();
             print $form->getMedia();
             $media .= ob_get_clean();
         }
+
         return $this->encode(array(
             'media' => $media,
             'html' => $html,
         ));
+
     }
 
     function getClientFormsForHelpTopic($topic_id) {

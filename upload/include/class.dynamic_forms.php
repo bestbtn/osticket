@@ -964,6 +964,7 @@ class DynamicFormEntry extends VerySimpleModel {
 
     function getAnswer($name) {
         foreach ($this->getAnswers() as $ans)
+
             if ($ans->getField()->get('name') == $name)
                 return $ans;
         return null;
