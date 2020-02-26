@@ -379,6 +379,7 @@ if($_POST && !$errors):
     }elseif($_POST['a']) {
 
         switch($_POST['a']) {
+
             case 'open':
                 $ticket=null;
                 if (!$thisstaff ||
@@ -389,7 +390,14 @@ if($_POST && !$errors):
                              __('Contact admin for such access'));
                 } else {
                     $vars = $_POST;
-
+                    // echo "<pre>";
+                    // print_r($_POST);
+                    // echo "<pre>";
+                    // for ($i = 0; $i < 5; $i++) {
+                    //     next($_POST);
+                    // }
+                    //
+                    // exit;
                     if ($vars['uid'] && !($user=User::lookup($vars['uid'])))
                         $vars['uid'] = 0;
 
@@ -397,10 +405,11 @@ if($_POST && !$errors):
 
                     if(($ticket=Ticket::open($vars, $errors))) {
 
+
                         $msg=__('Ticket created successfully');
                         $id = Payment::getLastIdTicket();
-                        Payment::push( $id  );
-                        //$id = Payment::getLastIdTicket();
+                        Payment::push($id);
+                        $id = Payment::getLastIdTicket();
 
                         $_REQUEST['a']=null;
                         if (!$ticket->checkStaffPerm($thisstaff) || $ticket->isClosed())
