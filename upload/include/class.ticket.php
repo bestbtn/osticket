@@ -4467,6 +4467,7 @@ implements RestrictedAccess, Threadable, Searchable {
 
     /* routine used by staff to open a new ticket */
     static function open($vars, &$errors) {
+
         global $thisstaff, $cfg;
 
         if (!$thisstaff)
@@ -4509,8 +4510,58 @@ implements RestrictedAccess, Threadable, Searchable {
         // TODO: Deny action based on selected department.
         $vars['response'] = ThreadEntryBody::clean($vars['response']);
         $vars['note'] = ThreadEntryBody::clean($vars['note']);
+
+        $i = 0;
+        foreach ($vars as $key => $value) {
+                $vars['number'][$key] = $i++;
+        }
+        foreach ($vars['number'] as $key => $value) {
+            if($value == 8){
+
+                $vars[$key] = "KT Test ".date('Y-m-d');
+            }
+            if($value == 18){
+                $vars[$key] = date('Y-m-d');
+            }
+        }
+
+        $vars['message'] = "KT Test messasge ".date('Y-m-d');
+
+        // $vars[$key] = "KT Test ".date('Y-m-d');
+
+        // $vars['message'] = "KT Test messasge ".date('Y-m-d');
+        // $vars['dateForm'] = date('Y-m-d');
+
+
+        // reset($vars);
+
+        // for ($i = 0; $i < 8; $i++) {
+        //         next($vars);
+        // }
+        // $key = "KT Test ".date('Y-m-d') =  current($vars) ;
+
+        // echo "<pre>";
+        // print_r(current($vars));
+        // echo "<pre>";
+
         $create_vars = $vars;
+
+
+
+
+        // $create_vars['df0b424a228fcd'] =  "KT Test ".date('Y-m-d');
+        // $create_vars['message'] = "KT Test ".date('Y-m-d');
+        // $create_vars['3ac73e648b70e6'] = date('Y-m-d');
+
+        // $create_vars['summary123'] =  "KT Test ".date('Y-m-d');
+        // $create_vars['demoSummary'] =  "KT Test ".date('Y-m-d');
+        // $create_vars['dateForm'] = date('Y-m-d');
+        // $create_vars['source'] = "Phone";
+
+
         $tform = TicketForm::objects()->one()->getForm($create_vars);
+
+
         $create_vars['files']
             = $tform->getField('message')->getWidget()->getAttachments()->getFiles();
 
