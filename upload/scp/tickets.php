@@ -390,13 +390,11 @@ if($_POST && !$errors):
                              __('Contact admin for such access'));
                 } else {
                     $vars = $_POST;
-                    // echo "<pre>";
-                    // print_r($_POST);
-                    // echo "<pre>";
+
                     // for ($i = 0; $i < 5; $i++) {
                     //     next($_POST);
                     // }
-                    //
+                    //cd..
                     // exit;
                     if ($vars['uid'] && !($user=User::lookup($vars['uid'])))
                         $vars['uid'] = 0;

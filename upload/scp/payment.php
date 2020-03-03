@@ -10,6 +10,12 @@ class Payment  {
         return $id;
     }
 
+    public static function getListPayment(){
+        $list =db_result(db_query("SELECT 'booking_code','time','amount','quantity','note' FROM payment_tmp ORDER BY ticket_id DESC"));
+
+        return $list;
+    }
+
     public static function get_inner_sql($type) {
         return " (SELECT DISTINCT
              vv.value

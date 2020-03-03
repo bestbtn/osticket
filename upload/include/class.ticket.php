@@ -4540,10 +4540,6 @@ implements RestrictedAccess, Threadable, Searchable {
         // }
         // $key = "KT Test ".date('Y-m-d') =  current($vars) ;
 
-        // echo "<pre>";
-        // print_r(current($vars));
-        // echo "<pre>";
-
         $create_vars = $vars;
 
 
