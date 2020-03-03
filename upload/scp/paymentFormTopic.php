@@ -1,8 +1,13 @@
+
 <?php require('staff.inc.php');
 require_once('payment.php');
+require_once INCLUDE_DIR . 'class.report.php';
 
 $nav->setTabActive('payments');
 require_once(STAFFINC_DIR.'header.inc.php');
+$report = new OverviewReport($_POST['start'], $_POST['end']);
+
+
 ?>
 
 <div style="margin-bottom:5px; padding-top:5px;">
@@ -10,10 +15,13 @@ require_once(STAFFINC_DIR.'header.inc.php');
     <div class="sticky bar opaque">
         <div class="content" style="width: 938px;">
             <div class="pull-left flush-left">
-                <h2>List Payment  <i class="help-tip icon-question-sign" href="#ticket_activity"></i>
+                <h2>List Payment
+                    <i class="help-tip icon-question-sign" href="#ticket_activity"></i>
                 </h2>
             </div>
-        <a class="only sticky scroll-up" href="#" data-stop="116"><i class="icon-chevron-up icon-large"></i></a>
+        <a class="only sticky scroll-up" href="#" data-stop="116">
+            <i class="icon-chevron-up icon-large"></i>
+        </a>
         <br><br>
         </div>
     </div>
@@ -23,8 +31,21 @@ require_once(STAFFINC_DIR.'header.inc.php');
         <tr>
             <td width="10%"><b>Date Span</b> Between</td>
             <td width="40%">
-                <input type="text" class="dp input-medium search-query hasDatepicker" name="start"  value="" id="dp1583112846365"><button type="button" class="ui-datepicker-trigger"><img src="./images/cal.png" alt="..." title="..."></button>
-                <input type="text" class="dp input-medium search-query hasDatepicker" name="end"  value="" id="dp1583112846365"><button type="button" class="ui-datepicker-trigger"><img src="./images/cal.png" alt="..." title="..."></button>
+                <label>
+                <input type="text" class="dp input-medium search-query"
+                    name="start"
+                    value="<?php
+                        echo Format::htmlchars($report->getStartDate());
+                    ?>" />
+                </label>
+                <label>
+                <input type="text" class="dp input-medium search-query"
+                    name="end"
+                    value="<?php
+                        echo Format::htmlchars($report->getStartDate());
+                    ?>" />
+                </label>
+
             </td>
             <td width="10%">Mã booking</td>
             <td width="20%">
