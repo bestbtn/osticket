@@ -20,6 +20,26 @@ if ($conn->connect_error>0) {
 $conn->set_charset('utf8');
 $report = new OverviewReport($_POST['start'], $_POST['end']);
 
+$kq = $conn->query("SELECT * FROM payment_tmp ORDER BY ticket_id DESC");
+if(!$kq) die('co loi');
+$rowsperpage = 10;
+$totalpages=$kq->num_rows;
+$pages = ceil($totalpages / $rowsperpage);
+
+if(isset($_GET['currentPage']) && is_numeric($_GET['currentPage'])){
+    $currentPage = (int) $_GET['currentPage'];
+}else{
+    $currentPage = 1;
+}
+
+if($currentPage >= $totalpages){
+    $currentPage = $_GET['currentPage'];
+}
+if($currentPage < 1){
+    $currentPage =1;
+}
+$offset = ($currentPage - 1)*$rowsperpage;
+
 ?>
 
 <link rel="stylesheet" type="text/css" href="css/payment.css"/>
@@ -141,13 +161,16 @@ $report = new OverviewReport($_POST['start'], $_POST['end']);
             </td>
         </tr>
 </table>
-    <div class="form-inline" style="margin-top: 1%;margin-bottom:2%">
-            <button type="submit" name="search" class="btn btn-primary" style="padding: 5px;border-radius: 5px;color: white;background-color: lightblue;border: none">Search</button>
+    <div class="form-inline" style="margin-top: 1%;margin-bottom:2%;float: left">
+            <button type="submit" name="search" class="btn btn-primary" style="padding: 5px;border-radius: 5px;color: white;background-color: lightblue;border: none;">Search</button>
             <button type="submit" name="reset" class="Reset" style="padding: 5px;border-radius: 5px;color: red;background-color: brown;border: none">Reset</button>
-            <button type="submit" name="export" class="primary" style="padding: 5px;border-radius: 5px;border: none">Export</button>
     </div>
 </form>
-
+<form method="post" action="excel.php">
+<div class="form-inline" style="margin-top: 1%;margin-bottom:2%;float: left;margin-left:3px">
+<button type="submit" name="export" class="primary" style="padding: 5px;border-radius: 5px;border: none">Export</button>
+</div>
+</form>
 
 <table class="list" border="0" cellspacing="1" cellpadding="0" width="940">
     <thead>
@@ -167,26 +190,6 @@ $report = new OverviewReport($_POST['start'], $_POST['end']);
     <tbody>
         <?php
 
-
-        $kq = $conn->query("SELECT * FROM payment_tmp ORDER BY ticket_id DESC");
-        if(!$kq) die('co loi');
-        $rowsperpage = 10;
-        $totalpages=mysqli_num_rows($kq);
-        $pages = ceil($totalpages / $rowsperpage);
-
-        if(isset($_GET['currentPage']) && is_numeric($_GET['currentPage'])){
-            $currentPage = (int) $_GET['currentPage'];
-        }else{
-            $currentPage = 1;
-        }
-
-        if($currentPage >= $totalpages){
-            $currentPage = $_GET['currentPage'];
-        }
-        if($currentPage < 1){
-            $currentPage =1;
-        }
-        $offset = ($currentPage - 1)*$rowsperpage;
         $sql = "SELECT * FROM  payment_tmp  ORDER BY ticket_id DESC LIMIT $offset ,$rowsperpage";
         $result = $conn->query($sql) ;
         if(!$result) die('co loi');
