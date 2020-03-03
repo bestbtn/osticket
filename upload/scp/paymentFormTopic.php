@@ -5,10 +5,24 @@ require_once INCLUDE_DIR . 'class.report.php';
 
 $nav->setTabActive('payments');
 require_once(STAFFINC_DIR.'header.inc.php');
+
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "osticket";
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error>0) {
+    die("Lỗi : ".$conn->connect_error);
+}
+$conn->set_charset('utf8');
 $report = new OverviewReport($_POST['start'], $_POST['end']);
 
-
 ?>
+
+<link rel="stylesheet" type="text/css" href="css/payment.css"/>
 
 <div style="margin-bottom:5px; padding-top:5px;">
     <div class="sticky placeholder"></div>
@@ -128,9 +142,9 @@ $report = new OverviewReport($_POST['start'], $_POST['end']);
         </tr>
 </table>
     <div class="form-inline" style="margin-top: 1%;margin-bottom:2%">
-            <button type="submit" name="search" class="btn btn-primary" style="padding: 5px;border-radius: 5px;color: white;background-color: lightblue">Search</button>
-            <button type="submit" name="reset" class="Reset" style="padding: 5px;border-radius: 5px;color: red;background-color: brown">Reset</button>
-            <button type="submit" name="export" class="primary" style="padding: 5px;border-radius: 5px">Export</button>
+            <button type="submit" name="search" class="btn btn-primary" style="padding: 5px;border-radius: 5px;color: white;background-color: lightblue;border: none">Search</button>
+            <button type="submit" name="reset" class="Reset" style="padding: 5px;border-radius: 5px;color: red;background-color: brown;border: none">Reset</button>
+            <button type="submit" name="export" class="primary" style="padding: 5px;border-radius: 5px;border: none">Export</button>
     </div>
 </form>
 
@@ -153,23 +167,35 @@ $report = new OverviewReport($_POST['start'], $_POST['end']);
     <tbody>
         <?php
 
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "osticket";
-        // Create connection
-        $conn = new mysqli($servername, $username, $password, $dbname);
-        // Check connection
-        if ($conn->connect_error>0) {
-            die("Lỗi : ".$conn->connect_error);
-        }
-        $conn->set_charset('utf8');
+
         $kq = $conn->query("SELECT * FROM payment_tmp ORDER BY ticket_id DESC");
         if(!$kq) die('co loi');
+        $rowsperpage = 10;
+        $totalpages=mysqli_num_rows($kq);
+        $pages = ceil($totalpages / $rowsperpage);
+
+        if(isset($_GET['currentPage']) && is_numeric($_GET['currentPage'])){
+            $currentPage = (int) $_GET['currentPage'];
+        }else{
+            $currentPage = 1;
+        }
+
+        if($currentPage >= $totalpages){
+            $currentPage = $_GET['currentPage'];
+        }
+        if($currentPage < 1){
+            $currentPage =1;
+        }
+        $offset = ($currentPage - 1)*$rowsperpage;
+        $sql = "SELECT * FROM  payment_tmp  ORDER BY ticket_id DESC LIMIT $offset ,$rowsperpage";
+        $result = $conn->query($sql) ;
+        if(!$result) die('co loi');
+
         //Payment::getListPayment();
         $i = 0;
-        while ($rowkq = $kq->fetch_assoc()) {
+        while ($rowkq = $result->fetch_assoc()) {
         ?>
+
             <tr id="<?= $rowkq['ticket_id']?>">
                 <td nowrap="" align="center">
                     <?= "TK-".$rowkq['number']?>
@@ -225,6 +251,35 @@ $report = new OverviewReport($_POST['start'], $_POST['end']);
     </tbody>
 
 </table>
+
+
+<div class="pagination-area">
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <ul class="pagination-box">
+                <?php if ($currentPage > 1 && $pages > 1){?>
+                <li><a href="<?= ROOT_PATH?>paymentFormTopic.php?currentPage=<?=($currentPage-1)?>" class="Previous"><i class="fa fa-chevron-left"></i> Trước</a>
+                </li>
+                <?php }?>
+                <!-- Trang hiện tại thì thẻ span-->
+                <?php for ($i = 1; $i <= $pages; $i++){
+                 if ($i == $currentPage){
+                ?>
+                 <li ><span style="font-weight: bold;color: red;"><?= $i?></span></li>
+                <?php }
+                else {
+                ?>
+                <li ><a href="paymentFormTopic.php?currentPage=<?= $i?>"><?= $i?></a></li>
+                <?php }}?>
+                <li>
+                    <?php if ($currentPage < $pages && $pages > 1){?>
+                  <a href="paymentFormTopic.php?currentPage=<?=($current_Page+1)?>" class="Next"> Tiếp <i class="fa fa-chevron-right"></i></a><?php }?>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 
 <?php
 require_once(STAFFINC_DIR.'footer.inc.php');
