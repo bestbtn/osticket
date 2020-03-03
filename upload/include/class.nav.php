@@ -62,14 +62,22 @@ class StaffNav {
 
     function setTabActive($tab, $menu=''){
 
+        /* $this->tabs[$tab]
+            [desc] => Payment
+            [href] => paymentFormTopic.php
+            [title] => payment Queue
+        )*/
+
         if($this->tabs[$tab]){
             $this->tabs[$tab]['active']=true;
             if($this->activetab && $this->activetab!=$tab && $this->tabs[$this->activetab])
                  $this->tabs[$this->activetab]['active']=false;
 
             $this->activetab=$tab;
-            if($menu) $this->setActiveSubMenu($menu, $tab);
+            //$tab = dashboard
 
+            if($menu)
+                $this->setActiveSubMenu($menu, $tab);
             return true;
         }
 
@@ -85,6 +93,7 @@ class StaffNav {
     }
 
     function setActiveSubMenu($mid, $tab='') {
+
         if(is_numeric($mid))
             $this->activeMenu = $mid;
         elseif($mid && $tab && ($subNav=$this->getSubNav($tab))) {
@@ -130,15 +139,23 @@ class StaffNav {
             $this->tabs['dashboard'] = array(
                 'desc'=>__('Dashboard'),'href'=>'dashboard.php','title'=>__('Agent Dashboard'), "class"=>"no-pjax"
             );
+
+
+
             if ($thisstaff->hasPerm(User::PERM_DIRECTORY)) {
                 $this->tabs['users'] = array(
                     'desc' => __('Users'), 'href' => 'users.php', 'title' => __('User Directory')
                 );
             }
             $this->tabs['tasks'] = array('desc'=>__('Tasks'), 'href'=>'tasks.php', 'title'=>__('Task Queue'));
+
+
             $this->tabs['tickets'] = array('desc'=>__('Tickets'),'href'=>'tickets.php','title'=>__('Ticket Queue'));
 
             $this->tabs['kbase'] = array('desc'=>__('Knowledgebase'),'href'=>'kb.php','title'=>__('Knowledgebase'));
+
+            $this->tabs['payments'] = array('desc'=>__('Payment'), 'href'=>'paymentFormTopic.php', 'title'=>__('payment Queue'));
+
             if (!is_null($this->getRegisteredApps()))
                 $this->tabs['apps']=array('desc'=>__('Applications'),'href'=>'apps.php','title'=>__('Applications'));
         }
@@ -166,6 +183,10 @@ class StaffNav {
                     $subnav[] = array('desc' => __('User Directory'), 'href' => 'users.php', 'iconclass' => 'teams');
                     $subnav[] = array('desc' => __('Organizations'), 'href' => 'orgs.php', 'iconclass' => 'departments');
                     break;
+                case 'payments':
+                    $subnav[] = array('desc' => __('List Payment'), 'href' => 'paymentFormTopic.php', 'iconclass'=>'logs');
+                    $subnav[] = array('desc' => __('Payment 2'), 'href' => 'paymentFormTopic1.php', 'iconclass' => 'logs2');
+                    break;
                 case 'kbase':
                     $subnav[]=array('desc'=>__('FAQs'),'href'=>'kb.php', 'urls'=>array('faq.php'), 'iconclass'=>'kb');
                     if($staff) {
@@ -179,6 +200,7 @@ class StaffNav {
                     foreach ($this->getRegisteredApps() as $app)
                         $subnav[] = $app;
                     break;
+
             }
             if($subnav)
                 $submenus[$this->getPanel().'.'.strtolower($k)]=$subnav;

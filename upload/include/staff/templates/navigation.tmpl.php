@@ -1,15 +1,22 @@
 <?php
 if(($tabs=$nav->getTabs()) && is_array($tabs)){
+
     foreach($tabs as $name =>$tab) {
+
         if ($tab['href'][0] != '/')
             $tab['href'] = ROOT_PATH . 'scp/' . $tab['href'];
         echo sprintf('<li class="%s %s"><a href="%s">%s</a>',
             $tab['active'] ? 'active':'inactive',
             @$tab['class'] ?: '',
             $tab['href'],$tab['desc']);
+
+
+
         if(!$tab['active'] && ($subnav=$nav->getSubMenu($name))){
             echo "<ul>\n";
             foreach($subnav as $k => $item) {
+
+                // $item['id'] : List payment, Payment 2 tên của sub menu
                 if (!($id=$item['id']))
                     $id="nav$k";
                 if ($item['href'][0] != '/')
